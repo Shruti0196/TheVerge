@@ -1,4 +1,5 @@
 # import csv
+import sqlite3
 import csv
 import requests
 from bs4 import BeautifulSoup
@@ -48,3 +49,57 @@ with open('ddmmyyy_verge.csv', 'w', encoding='UTF8') as f:
                 data_list.append(date.string.lstrip())
         i = i+1
         writer.writerow(data_list)
+
+
+# try:
+with open('ddmmyyy_verge.csv', 'r') as fin:
+    dr = csv.DictReader(fin)
+    article_data = [(i['id'], i['URL'], i['headline'],
+                     i['author'], i['date']) for i in dr]
+    print(article_data)
+
+    sqliteConnection = sqlite3.connect('theverge.db')
+cursor = sqliteConnection.cursor()
+create_table = '''CREATE TABLE article(
+                        id INTEGER PRIMARY KEY ,
+                        URL TEXT ,
+                        headline TEXT,
+                        author TEXT,
+                        date TEXT );
+                        '''
+
+
+cursor.execute(create_table)
+
+
+cursor.executemany(
+    "insert into article (id,URL,headline,author,date) VALUES (?, ?, ?, ?, ?);", article_data)
+
+cursor.execute('select * from article;')
+
+
+result = cursor.fetchall()
+# print(result)
+
+
+sqliteConnection.commit()
+cursor.close()
+
+# except sqlite3.Error as error:
+# 	print('Error occured - ', error)
+
+# finally:
+# 	if sqliteConnection:
+# 		sqliteConnection.close()
+# 		print('SQLite Connection closed')
+
+# create_table = '''CREATE TABLE data(
+# 				id INTEGER PRIMARY KEY ,
+# 				URL TEXT ,
+# 				headline TEXT,
+#                 author TEXT,
+#                 date TEXT );
+# 				'''
+
+
+# cursor.execute(create_table)

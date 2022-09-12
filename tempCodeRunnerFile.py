@@ -1,3 +1,10 @@
-# .find('a', class_='c-entry-box--compact__image-wrapper')
+# data(
+# 				id INTEGER PRIMARY KEY ,
+# 				URL TEXT ,
+# 				headline TEXT,
+#                 author TEXT,
+#                 date TEXT );
+# 				'''
 
-# # print(links)
+
+# cursor.execute(create_table)
